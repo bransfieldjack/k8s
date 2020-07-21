@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exo-cms
+  namespace: default
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      exo-cms: web
+  template:
+    metadata:
+      labels:
+        exo-cms: web
+    spec:
+      containers:
+      - name: exo-cms-site
+        image: jackalack117/exo-cms
+        ports:
+          - containerPort: 1337
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-load-balancer
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 1337
+      name: http
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: exo-cms-entrypoint
+#   namespace: default
+# spec:
+#   type: NodePort
+#   selector:
+#     exo-cms: web
+#   ports:
+#   - port: 1337
+#     targetPort: 1337
+#     nodePort: 30000
+
